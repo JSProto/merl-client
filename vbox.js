@@ -59,6 +59,7 @@ function parse_infodata(stdout){
 
 	let str = rePair.match(stdout).reduce(function(info, match){
 		let [, key, val] = match;
+		key = key.trim();
 		val = val.trim();
 		if (val == '<not set>') val = null;
 
