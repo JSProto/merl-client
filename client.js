@@ -43,7 +43,7 @@ let router = {
 	stop: function(req, res) {
 		let name = req.query.name;
 
-		VBox.factory(name).stop()
+		VBox.factory(name).poweroff()
 			.then(() => res.json({success: true}))
 			.catch(e => {
 				let response = {
