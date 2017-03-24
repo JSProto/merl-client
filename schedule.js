@@ -18,6 +18,13 @@ function getListVM() {
     });
 }
 
+function sortVM (vm1, vm2) {
+    let t1 = new Date(vm1.get('VMStateChangeTime'));
+    let t2 = new Date(vm2.get('VMStateChangeTime'));
+
+    return t1 > t2 ? 1 : t1 < t2 ? -1 : 0;
+}
+
 let startJob = function(vm, i) {
 
     // start vm
@@ -84,11 +91,12 @@ function start() {
         try {
             let running = vms.filter(vm => vm.get('VMState') == 'running').length;
 
-            vms.sort((vm1, vm2) => vm1.get('VMStateChangeTime') > vm2.get('VMStateChangeTime'))
+            vms.sort(sortVM);
 
             let toRunVMS = vms.filter(vm => vm.get('running') != 'running').slice(0, limitStartedVM - running);
 
             console.log('running', running, toRunVMS.length);
+
 
             toRunVMS.map(startJob);
         }
