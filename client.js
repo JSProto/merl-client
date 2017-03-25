@@ -78,11 +78,18 @@ let router = {
 	list: function(req, res) {
 		VBox.list().then(Object.values).then(function(vms) {
 
-			vms.forEach(vm => vm.state = vm.running);
+			let promises = vms.map(vm => {
+				return VBox.factory(vm.name).info().then(function(v){
+					v.state = v.running = vm.running;
+					return v;
+				});
+			});
 
-			res.json({
-				success: true,
-				list: vms
+			Promise.all(promises).then(function(vms){
+				res.json({
+					success: true,
+					list: vms.filter(vm => vm.groups == '/')
+				});
 			});
 
 		}).catch(function(e) {
